@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { useMouseHold } from '../context/useMouseHold';
 import { useTracks } from '../context/useTracks';
 import Action from './Action';
 
 export default function Track({ track }) {
 	const actions = useTracks(state => state[track]);
 	const addAction = useTracks(state => state.addAction);
-	const isMouseDown = useMouseHold(state => state.isMouseDown);
+	const setStop = useTracks(state => state.setStop);
 	const isMouseOnTrack = useRef(false);
 
 	function onMouseDown(e) {
@@ -17,7 +16,8 @@ export default function Track({ track }) {
 		addEventListener('mouseup', e => {
 			if (e.target.matches('.track') && isMouseOnTrack.current) {
 				const clickPosition = Math.abs(e.target.offsetLeft) + e.clientX - 20;
-				addAction(track, clickPosition);
+				if (e.altKey) setStop(clickPosition);
+				else addAction(track, clickPosition);
 			}
 
 			isMouseOnTrack.current = false;

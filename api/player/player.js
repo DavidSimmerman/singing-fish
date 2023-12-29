@@ -1,10 +1,10 @@
-import playsound from 'play-sound';
-
-const player = playsound();
+import fishController from '../../fishController/fishController';
 
 export function playSong(req, res) {
-	const { song } = req.body;
-	const audio = player.play(`public/songs/${song}/aduio.wav`);
-	res.json({ success: true });
-	setTimeout(() => audio.kill(), 5000);
+	const { songPath } = req.body;
+
+	if (songPath) fishController.playSong(songPath);
+	else fishController.playRandom();
+
+	res.status(200).json({ success: true });
 }

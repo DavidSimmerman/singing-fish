@@ -10,7 +10,8 @@ export const useSongs = create((set, get) => {
 		toggleSongOpen: () => set(state => ({ newSongOpen: !state.newSongOpen })),
 		addNewSong,
 		deleteSong,
-		saveSong
+		saveSong,
+		playSong
 	};
 
 	store.refreshSongs();
@@ -110,5 +111,18 @@ export const useSongs = create((set, get) => {
 
 		alert('Song successfully saved.');
 		return refreshSongs();
+	}
+
+	async function playSong() {
+		const songPath = get().selected;
+		await fetch('/api/songs', {
+			method: 'POST',
+			headers: {
+				'content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				songPath
+			})
+		});
 	}
 });

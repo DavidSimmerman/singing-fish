@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { FiMusic, FiSave } from 'react-icons/fi';
+import { useSongs } from '../context/useSongs';
 import { useTracks } from '../context/useTracks';
 
 export default function SongSettings() {
 	const hasChanges = useTracks(state => state.hasChanges);
 	const exportActions = useTracks(state => state.exportActions);
-
-	function playSong() {}
+	const playSong = useSongs(state => state.playSong);
 
 	function saveSong() {
 		if (!hasChanges) return;

@@ -15,6 +15,9 @@ export default function TrackContainer() {
 	const setTrackEnd = useTracks(state => state.setTrackEnd);
 	const addAction = useTracks(state => state.addAction);
 	const growAction = useTracks(state => state.growAction);
+	const stopAction = useTracks(state => state.stop);
+
+	console.log(stopAction);
 
 	const scrollableRef = useRef(null);
 	const growingActionRef = useRef(null);
@@ -83,6 +86,9 @@ export default function TrackContainer() {
 				<Track track="mouth" />
 				<Track track="head" />
 				<Track track="tail" />
+				{stopAction && (
+					<div className="w-2 h-full w-5px absolute top-0 bg-red-600" style={{ marginLeft: stopAction }}></div>
+				)}
 			</div>
 			<div className="w-[1px] h-full bg-white absolute top-0" style={{ marginLeft: indicatorPosition + 'px' }}></div>
 		</div>

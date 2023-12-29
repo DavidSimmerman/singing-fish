@@ -1,5 +1,6 @@
 import express from 'express';
 import { getAudioFile } from './audio/audio';
+import { playSong } from './player/player';
 import { deleteSong, getSongs, newSong, saveSong } from './songs/songs';
 
 export const expressApp = express();
@@ -12,3 +13,5 @@ expressApp.delete('/api/songs', deleteSong);
 expressApp.put('/api/songs', saveSong);
 
 expressApp.get('/audio/:song', getAudioFile);
+
+expressApp.post('/api/playSong', playSong);

@@ -36,6 +36,11 @@ function FishController() {
 	return controller;
 
 	function onButtonPress() {
+		if (!isPlaying) playRandom();
+		else stopSong();
+	}
+
+	function playRandom() {
 		const songs = fs.readdirSync('songs');
 		const randomSong = songs[Math.floor(Math.random() * DataTransferItemList.length)];
 		playSong(randomSong);
@@ -49,7 +54,7 @@ function FishController() {
 		if (!fs.existsSync(dir)) return console.log('Error: trying to play song ', songPath, " doesn't exist.");
 
 		const { actions } = JSON.parse(fs.readFileSync(dir + '/info.json', 'utf8'));
-		const audioPath = dir + '/audio.json';
+		const audioPath = dir + '/audio.wav';
 
 		isPlaying = true;
 		audioProcess = player.play(audioPath);

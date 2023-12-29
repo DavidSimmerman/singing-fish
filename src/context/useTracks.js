@@ -9,6 +9,8 @@ export const useTracks = create((set, get) => {
 		mouth: [],
 		head: [],
 		tail: [],
+		stop: undefined,
+		setStop,
 		hasChanges: false,
 		loadActions,
 		addAction,
@@ -32,6 +34,10 @@ export const useTracks = create((set, get) => {
 
 	return store;
 
+	function setStop(position) {
+		set({ stop: position });
+	}
+
 	function loadActions(songPath) {
 		const { songs } = useSongs.getState();
 		const song = songs.find(song => song.path === songPath);
@@ -40,9 +46,10 @@ export const useTracks = create((set, get) => {
 
 		currentId = 0;
 
-		const { mouth, head, tail } = actions.reduce(
+		const { mouth, head, tail, stop } = actions.reduce(
 			(tracks, action) => {
-				if (action.action === 'on') tracks.opened[action.motor] = action;
+				if (action.action === 'stop') tracks.stop = action.time;
+				else if (action.action === 'on') tracks.opened[action.motor] = action;
 				else if (action.action === 'off') {
 					const opening = tracks.opened[action.motor];
 					tracks[action.motor].push({
@@ -54,10 +61,10 @@ export const useTracks = create((set, get) => {
 				}
 				return tracks;
 			},
-			{ mouth: [], head: [], tail: [], opened: {} }
+			{ mouth: [], head: [], tail: [], stop: undefined, opened: {} }
 		);
 
-		set({ mouth, head, tail, hasChanges: false });
+		set({ mouth, head, tail, stop, hasChanges: false });
 	}
 
 	function addAction(track, start, options = {}) {
@@ -217,23 +224,26 @@ export const useTracks = create((set, get) => {
 	async function exportActions() {
 		const state = get();
 		const totalActions = ['mouth', 'head', 'tail']
-			.reduce((totalActions, track) => {
-				let actions = state[track];
-				actions = actions
-					.reduce((total, current) => {
-						total.push({ motor: track, action: 'on', time: current.start });
-						total.push({ motor: track, action: 'off', time: current.start + current.length });
-						return total;
-					}, [])
-					.sort((a, b) => a.time - b.time)
-					.reduce((total, current) => {
-						const last = total.at(-1);
-						if (last && last.action === current.action) return total;
-						else return [...total, current];
-					}, []);
+			.reduce(
+				(totalActions, track) => {
+					let actions = state[track];
+					actions = actions
+						.reduce((total, current) => {
+							total.push({ motor: track, action: 'on', time: current.start });
+							total.push({ motor: track, action: 'off', time: current.start + current.length });
+							return total;
+						}, [])
+						.sort((a, b) => a.time - b.time)
+						.reduce((total, current) => {
+							const last = total.at(-1);
+							if (last && last.action === current.action) return total;
+							else return [...total, current];
+						}, []);
 
-				return [...totalActions, ...actions];
-			}, [])
+					return [...totalActions, ...actions];
+				},
+				[{ action: 'stop', time: state.stop }]
+			)
 			.sort((a, b) => a.time - b.time);
 
 		console.log(totalActions);
