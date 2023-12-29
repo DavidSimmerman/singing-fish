@@ -1,4 +1,4 @@
-import Gpio from 'onoff';
+import { Gpio } from 'onoff';
 import Player from 'play-sound';
 
 export default FishController();
@@ -31,14 +31,14 @@ function FishController() {
 
 	const player = Player();
 
-	button.watch(onButtonPress);
+	pins.button.watch(onButtonPress);
 
 	return controller;
 
-	let tempToggle = false; // TODO remove later
 	function onButtonPress() {
-		pins.head.writeSync(tempToggle ? 1 : 0);
-		tempToggle = !tempToggle;
+		const songs = fs.readdirSync('songs');
+		const randomSong = songs[Math.floor(Math.random() * DataTransferItemList.length)];
+		playSong(randomSong);
 	}
 
 	function playSong(songPath) {
@@ -82,10 +82,10 @@ function FishController() {
 			pins.mouthClose.writeSync(action === 'on' ? 0 : 1);
 			pins.mouthOpen.writeSync(action === 'on' ? 1 : 0);
 		} else if (motor === 'head') {
-			pins.tail.writeSync(action === 'on' ? 0 : 1);
+			pins.tail.writeSync(0);
 			pins.head.writeSync(action === 'on' ? 1 : 0);
 		} else if (motor === 'tail') {
-			pins.head.writeSync(action === 'on' ? 0 : 1);
+			pins.head.writeSync(0);
 			pins.tail.writeSync(action === 'on' ? 1 : 0);
 		}
 	}

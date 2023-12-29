@@ -1,10 +1,6 @@
 import fs from 'fs';
 
 export async function getSongs(_, res) {
-	const info = fs.readdirSync('songs').reduce((songs, path) => {
-		fs.readFileSync;
-	});
-
 	const songs = await Promise.all(
 		fs
 			.readdirSync('songs')
