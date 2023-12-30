@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { Gpio } from 'onoff';
 import Player from 'play-sound';
 
