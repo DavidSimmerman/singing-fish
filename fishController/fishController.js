@@ -45,7 +45,7 @@ function FishController() {
 
 	function playRandom() {
 		const songs = fs.readdirSync('songs');
-		const randomSong = songs[Math.floor(Math.random() * DataTransferItemList.length)];
+		const randomSong = songs[Math.floor(Math.random() * songs.length)];
 		playSong(randomSong);
 	}
 
