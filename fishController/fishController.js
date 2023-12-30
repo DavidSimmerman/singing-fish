@@ -27,11 +27,13 @@ function FishController() {
 	};
 
 	let isPlaying = false;
-	let audioProcess, songClock, startTime;
+	let audioProcess, songClock, startTime, actionTimeout;
 
 	const player = Player();
 
 	pins.button.watch(onButtonPress);
+
+	sayHello();
 
 	return controller;
 
@@ -67,7 +69,14 @@ function FishController() {
 		isPlaying = false;
 		audioProcess?.kill();
 		clearInterval(songClock);
+		clearTimeout(actionTimeout);
 		motorsOff();
+	}
+
+	async function sayHello() {
+		pins.tail.writeSync(1);
+		await sleep(1500);
+		pins.tail.writeSync(0);
 	}
 
 	async function runActions(actions) {
@@ -107,6 +116,6 @@ function FishController() {
 	}
 
 	function sleep(timeout) {
-		return new Promise(res => setTimeout(res, timeout));
+		return new Promise(res => (actionTimeout = setTimeout(res, timeout)));
 	}
 }
