@@ -115,7 +115,7 @@ export const useSongs = create((set, get) => {
 
 	async function playSong() {
 		const songPath = get().selected;
-		await fetch('/api/songs', {
+		await fetch('/api/playSong', {
 			method: 'POST',
 			headers: {
 				'content-type': 'application/json'
