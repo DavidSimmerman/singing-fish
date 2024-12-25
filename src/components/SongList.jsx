@@ -32,7 +32,7 @@ export default function SongList() {
 				onChange={onSongChange}
 			>
 				{songs.map((song, i) => (
-					<option key={i} value={song.path}>
+					<option className="bg-zinc-700" key={i} value={song.path}>
 						{song.name}
 					</option>
 				))}
